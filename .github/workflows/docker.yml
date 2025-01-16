@@ -43,5 +43,5 @@ jobs:
               with:
                   context: .
                   push: true
-                  tag: stable
+                  tags: stable
 
