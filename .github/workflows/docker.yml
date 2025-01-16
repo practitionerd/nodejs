@@ -43,5 +43,5 @@ jobs:
               with:
                   context: .
                   push: true
-                  tags: stable
+                  tags: ghcr.io/${{ github.repository }}:latest
 
