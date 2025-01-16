@@ -1,0 +1,46 @@
+name: Build and Publish Docker Base Image
+
+on:
+    push:
+        branches: [ main ]
+        paths:
+            - 'Dockerfile'
+            - '.github/workflows/docker.yml'
+            - 'docker/**'
+    
+    workflow_dispatch:
+        inputs:
+            version:
+                description: 'Version tag for the image'
+                required: true
+                default: latest
+
+env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: ${{ github.repository }}/node-base
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-18.04
+        permissions:
+            contents: read
+            packages: write
+            security-events: write
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Log in to the Container registry
+              uses: docker/login-actions@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+            
+            - name: Build and push Docker image
+              uses: docker/build-push-actions@v5
+              with:
+                  context: .
+                  push: true
+                  
